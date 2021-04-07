@@ -24,10 +24,7 @@
 
     /* Converta a função abaixo em um componente. */
 
-    let props = ({id, labelText, onInputChange})
-    let props2 = ({imc, classif})
-
-    function InputSet(props) {
+    function InputSet({id, labelText, onInputChange}) {
       return (
         <div>
           <label htmlFor={id}>{labelText}</label>
@@ -37,7 +34,7 @@
     }
 
     /* Converta esta função em um componente */
-    function Result(props2) {
+    function Result({imc, classif}) {
       return (
         <>
           <div className="result">IMC: {imc}</div>
@@ -54,16 +51,16 @@
          * classif
          * imc
       */
-        const [peso, setPeso] = React.useState('')
-        const [altura, setAltura] = React.useState('')
-        const [classif, setClassif] = React.useState('')
-        const [imc, setImc] = React.useState('')
+        const [peso, setPeso] = React.useState()
+        const [altura, setAltura] = React.useState()
+        const [classif, setClassif] = React.useState()
+        const [imc, setImc] = React.useState()
 
       function handleInputChange(event) {
         /* Faça as modificações necessárias na manipulação das variáveis de estado
            nas linhas abaixo. */
-        if(event.target.id === 'peso') estadoPeso = event.target.value
-        else if(event.target.id === 'altura') estadoAltura = event.target.value
+        if(event.target.id === 'peso') setPeso(event.target.value)
+        else if(event.target.id === 'altura') setAltura(event.target.value)
       }
 
       /* Use o código a seguir dentro da função seguinte em um useEffect() tendo
@@ -74,25 +71,31 @@
       
       React.useEffect(() => {
 
-      // Início do código para useEffect()
-        if(isNaN(estadoPeso) || isNaN(estadoAltura)) estadoImc = '---'
-        else estadoImc = estadoPeso / estadoAltura ** 2
+      let imcTemp, classifTemp
 
-        if(estadoImc < 18.5) 
-          estadoClassif = 'Abaixo do peso'
-        else if(estadoImc > 18.5 && estadoImc < 25)
-          estadoClassif = 'Peso Normal'
-        else if(estadoImc >= 25 && estadoImc < 30)
-          estadoClassif = 'Sobrepeso'
-        else if(estadoImc >= 30 && estadoImc < 35)
-          estadoClassif = 'Obesidade Grau I'
-        else if(estadoImc >= 35 && estadoImc < 40)
-          estadoClassif = 'Obesidade Grau II'
-        else if(estadoImc >= 40)
-          estadoClassif = 'Obesidade Grau III ou Mórbida'
+      // Início do código para useEffect()
+        if(isNaN(peso) || isNaN(altura)) imcTemp = '---'
+        else imcTemp =peso / altura ** 2
+
+        if(imcTemp < 18.5) 
+          classifTemp = 'Abaixo do peso'
+        else if(imcTemp > 18.5 && imcTemp < 25)
+          classifTemp = 'Peso Normal'
+        else if(imcTemp >= 25 && imcTemp < 30)
+          classifTemp = 'Sobrepeso'
+        else if(imcTemp >= 30 && imcTemp < 35)
+          classifTemp = 'Obesidade Grau I'
+        else if(imcTemp >= 35 && imcTemp < 40)
+          classifTemp = 'Obesidade Grau II'
+        else if(imcTemp >= 40)
+          classifTemp = 'Obesidade Grau III ou Mórbida'
         else
-          estadoClassif = ''
-      })
+          classifTemp = ''
+
+        setImc(imcTemp)
+        setClassif(classifTemp)
+
+      }, [peso, altura])
       // Fim do código para useEffect()
 
       return (
@@ -100,9 +103,12 @@
         <h1>Cálculo do IMC</h1>
         <form>
           { /* Substitua as chamadas de função abaixo pelos componentes correspondentes */ }
-          { InputSet('peso', 'Peso (kg):', handleInputChange)}
-          { InputSet('altura', 'Altura (m):', handleInputChange)}
-          { Result(estadoImc, estadoClassif)}
+          {/* InputSet('peso', 'Peso (kg):', handleInputChange)*/}
+          {/* InputSet('altura', 'Altura (m):', handleInputChange)*/}
+          {/* Result(estadoImc, estadoClassif)*/}
+          <InputSet id="peso" labelText="Peso (kg):" onInputChange={handleInputChange}/>
+          <InputSet id="altura" labelText="Altura (m):" onInputChange={handleInputChange}/>
+          <Result imc={imc} classif={classif} />
         </form>
         </>
       )
